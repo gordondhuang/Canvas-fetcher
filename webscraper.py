@@ -4,22 +4,30 @@ import json
 import csv
 
 # Creates a CSV file with a column view of course information
-def create_csv(fileName):
+def create_courses(fileName):
     with open(fileName, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
-        headings = ["Course Name", "Instructor", "Section", "Syllabus Link","Time"]
+        headings = ["Course Name", "Instructor", "Section", "Course ID", "Syllabus Link","Time"]
         writer.writerow(headings)
 
-# Creates the JSON file to create the CSV file
-def create_json(data): 
-    with open ("courses.json", "w") as json_file:
-        json.dump(data, json_file, indent=4)
+# Creates a CSV file with a column view of assignments and due dates
+def create_assignments(fileName):
+    with open(fileName, 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        headings = ["Assignments", "Dates"]
+        writer.writerow(headings)
+
+def update_json(data, fileName):
+    with open(fileName, 'w+') as jsonfile:
+        json.dump(data, jsonfile, indent=4)
 
 # Parses the JSON data to convert to CSV
-def json_parser(data):
+def course_parser(data):
     with open("courses.csv", 'a', newline='') as csvfile:
         writer = csv.writer(csvfile)
-
+        courses_dict = {}
+        courses_list = []
+        json.dumps('courses.json', indent=4)
         for course in data:
             course_data = []
             favorite = course.get('is_favorite') # Check if this is one of the courses that is listed as a favorite
@@ -28,16 +36,48 @@ def json_parser(data):
                 course_Name = course.get('course_code')
                 instructor_Name = course.get('teachers')[0].get('display_name')
                 section = course.get('sections')[0].get('name')
-                course_data.append(course_Name)
-                course_data.append(instructor_Name)
-                course_data.append(section)
+                id = course.get('id')
+                courses_dict.update({'course_name' : course_Name})
+                courses_dict.update({'instructor_name' : instructor_Name})
+                courses_dict.update({'section' : section})
+                courses_dict.update({'id' : id})
+            
+                courses_list.append(courses_dict)
+                for key in courses_dict:
+                    course_data.append(courses_dict[key])
                 writer.writerow(course_data)
                 print(course_data)
 
+        update_json(courses_list, "courses.json")
+        
+
+# Generate assignment csv files for each class
+def assignment_list_generator(params,headers):
+    params.clear()
+    params.update({'type': 'assignment'})
+    params.update({'all_events' : 'True'})
+    assignment_urls = []
+    courses = []
+
+    with open("courses.json", 'r') as jsonfile:
+        courses_data = json.load(jsonfile)
+        for course in courses_data:
+            courses.append(course.get('course_name'))
+            assignment_urls.append(f"https://canvas.uw.edu/api/v1/courses/{course.get('id')}/assignments")
+
+        for i, url in enumerate(assignment_urls):
+            response = requests.get(url, params=params, headers=headers)
+            if response.status_code == 200:
+                create_assignments(f"{courses[i]}.csv")
+                print(response.json())
+            else:
+                print('Failed to retrieve assignments. Status code', response.status_code)
+
 token = open("canvas-token.txt", "r")
 apiKey = token.readline().strip()
-user_id = token.readline().strip()
-url ="http://canvas.uw.edu/api/v1/courses/"
+user_id = token.readline().strip() 
+course_url = "https://canvas.uw.edu/api/v1/courses/"
+assignment_url = "https://canvas.uw.edu/api/v1/courses/1699218/assignments"
 
 headers = {
     'Authorization': f'Bearer {apiKey}'
@@ -48,14 +88,15 @@ params = {
     'enrollment_state': 'active',  # Change to your preferred enrollment state
     'exclude_blueprint_courses': True,
     'state[]': ['available'],
-    'include[]': ['syllabus_body','term', 'sections','teachers','concluded','favorites','public_description']
+    'include[]': ['term', 'sections','teachers','concluded','favorites','public_description']
 }
 
-response = requests.get(url, params=params, headers=headers)
+response = requests.get(course_url, params=params, headers=headers)
 if response.status_code == 200:
     courses_data = response.json()
-    create_json(courses_data)
-    create_csv("courses.csv")
-    parsed_courses = json_parser(courses_data)
+    create_courses("courses.csv")
+    parsed_courses = course_parser(courses_data)
 else:
     print('Failed to retrieve courses. Status code', response.status_code)
+
+assignment_list_generator(params, headers)
