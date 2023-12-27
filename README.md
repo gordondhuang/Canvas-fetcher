@@ -5,6 +5,7 @@ This project was created to aid students in organizing their course information 
 To function correctly the **canvas-token.txt** must be modified.
 The first line entered into the .txt file should be your Canvas API token key(refer to token generation)
 The second line should be your Canvas User_Id(refer to user_id)
+The third line should be your university's url(ex. canvas.uw.edu)
 
 ## Canvas API Token key generation
 1. Log into your Canvas account

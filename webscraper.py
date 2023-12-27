@@ -17,7 +17,7 @@ def create_assignments(fileName):
         headings = ["Assignments", "Dates"]
         writer.writerow(headings)
 
-def update_json(data, fileName):
+def create_courseList(data, fileName):
     with open(fileName, 'w+') as jsonfile:
         json.dump(data, jsonfile, indent=4)
 
@@ -48,11 +48,11 @@ def course_parser(data):
                 writer.writerow(course_data)
                 print(course_data)
 
-        update_json(courses_list, "courses.json")
+        create_courseList(courses_list, "courses.json")
         
 
 # Generate assignment csv files for each class
-def assignment_list_generator(params,headers):
+def assignment_list_generator(canvas,params,headers):
     params.clear()
     params.update({'type': 'assignment'})
     params.update({'all_events' : 'True'})
@@ -63,7 +63,7 @@ def assignment_list_generator(params,headers):
         courses_data = json.load(jsonfile)
         for course in courses_data:
             courses.append(course.get('course_name'))
-            assignment_urls.append(f"https://canvas.uw.edu/api/v1/courses/{course.get('id')}/assignments")
+            assignment_urls.append(f"https://{canvas}/api/v1/courses/{course.get('id')}/assignments")
 
         for i, url in enumerate(assignment_urls):
             response = requests.get(url, params=params, headers=headers)
@@ -73,11 +73,11 @@ def assignment_list_generator(params,headers):
             else:
                 print('Failed to retrieve assignments. Status code', response.status_code)
 
-token = open("canvas-token.txt", "r")
+token = open("canvas-key.txt", "r")
 apiKey = token.readline().strip()
 user_id = token.readline().strip() 
-course_url = "https://canvas.uw.edu/api/v1/courses/"
-assignment_url = "https://canvas.uw.edu/api/v1/courses/1699218/assignments"
+canvas = token.readline().strip()
+course_url = f"https://{canvas}/api/v1/courses/"
 
 headers = {
     'Authorization': f'Bearer {apiKey}'
@@ -99,4 +99,4 @@ if response.status_code == 200:
 else:
     print('Failed to retrieve courses. Status code', response.status_code)
 
-assignment_list_generator(params, headers)
+assignment_list_generator(canvas, params, headers)
