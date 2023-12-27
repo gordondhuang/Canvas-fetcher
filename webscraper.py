@@ -1,3 +1,4 @@
+from datetime import datetime
 import time
 import requests
 import json
@@ -25,7 +26,6 @@ def create_courseList(data, fileName):
 def course_parser(data):
     with open("courses.csv", 'a', newline='') as csvfile:
         writer = csv.writer(csvfile)
-        courses_dict = {}
         courses_list = []
         json.dumps('courses.json', indent=4)
         for course in data:
@@ -33,6 +33,7 @@ def course_parser(data):
             favorite = course.get('is_favorite') # Check if this is one of the courses that is listed as a favorite
             
             if favorite :
+                courses_dict = {}
                 course_Name = course.get('course_code')
                 instructor_Name = course.get('teachers')[0].get('display_name')
                 section = course.get('sections')[0].get('name')
@@ -42,13 +43,28 @@ def course_parser(data):
                 courses_dict.update({'section' : section})
                 courses_dict.update({'id' : id})
             
-                courses_list.append(courses_dict)
+                courses_list.append(courses_dict) 
                 for key in courses_dict:
                     course_data.append(courses_dict[key])
                 writer.writerow(course_data)
-                print(course_data)
 
         create_courseList(courses_list, "courses.json")
+        
+def update_assignments(data, course):
+    with open(course, 'a', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        for assignment in data:
+            assignment_data = []
+            assign_name = assignment.get('name')
+            due_date = assignment.get('due_at')
+            if due_date is not None:
+                due_date_obj = datetime.strptime(due_date, '%Y-%m-%dT%H:%M:%SZ')
+                due_date = due_date_obj.strftime("%m/%d/%y")
+            assignment_data.append(assign_name)
+            assignment_data.append(due_date)
+            writer.writerow(assignment_data)
+            print(assignment_data)
+
         
 
 # Generate assignment csv files for each class
@@ -68,8 +84,9 @@ def assignment_list_generator(canvas,params,headers):
         for i, url in enumerate(assignment_urls):
             response = requests.get(url, params=params, headers=headers)
             if response.status_code == 200:
-                create_assignments(f"{courses[i]}.csv")
-                print(response.json())
+                course_csv = f"{courses[i]}.csv"
+                create_assignments(course_csv)
+                update_assignments(response.json(), course_csv)
             else:
                 print('Failed to retrieve assignments. Status code', response.status_code)
 
