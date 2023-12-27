@@ -63,7 +63,6 @@ def update_assignments(data, course):
             assignment_data.append(assign_name)
             assignment_data.append(due_date)
             writer.writerow(assignment_data)
-            print(assignment_data)
 
         
 
