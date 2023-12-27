@@ -12,7 +12,7 @@ The second line should be your Canvas User_Id(refer to user_id)
 3. Under Approved Integrations create a New Access Token
 
 ## Retrieving User_id
-1. Go to https://canvas/api/v1/users/self(replace canvas)
+1. Go to https://canvas/api/v1/users/self (replace canvas)
 2. The id is within the json object
 
 ## Documentation
