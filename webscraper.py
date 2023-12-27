@@ -5,7 +5,6 @@ import json
 token = open("canvas-token.txt", "r")
 apiKey = token.readline().strip()
 user_id = token.readline().strip()
-#url ="http://canvas.uw.edu/api/v1/accounts/"+user_id+"/courses?access_token="+apiKey
 url ="http://canvas.uw.edu/api/v1/courses/"
 
 headers = {
