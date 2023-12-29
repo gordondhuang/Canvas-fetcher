@@ -4,6 +4,35 @@ import requests
 import json
 import csv
 
+def main():
+    token = open("canvas-key.txt", "r")
+    apiKey = token.readline().strip()
+    user_id = token.readline().strip() 
+    canvas = token.readline().strip()
+    course_url = f"https://{canvas}/api/v1/courses/"
+
+    headers = {
+        'Authorization': f'Bearer {apiKey}'
+    }
+
+    params = {
+        'enrollment_type': 'student',  # Change to your preferred enrollment type
+        'enrollment_state': 'active',  # Change to your preferred enrollment state
+        'exclude_blueprint_courses': True,
+        'state[]': ['available'],
+        'include[]': ['term', 'sections','teachers','concluded','favorites','public_description']
+    }
+
+    response = requests.get(course_url, params=params, headers=headers)
+    if response.status_code == 200:
+        courses_data = response.json()
+        create_courses("courses.csv")
+        parsed_courses = course_parser(courses_data)
+    else:
+        print('Failed to retrieve courses. Status code', response.status_code)
+
+    assignment_list_generator(canvas, params, headers)
+
 # Creates a CSV file with a column view of course information
 def create_courses(fileName):
     with open(fileName, 'w', newline='') as csvfile:
@@ -88,31 +117,4 @@ def assignment_list_generator(canvas,params,headers):
                 update_assignments(response.json(), course_csv)
             else:
                 print('Failed to retrieve assignments. Status code', response.status_code)
-
-token = open("canvas-key.txt", "r")
-apiKey = token.readline().strip()
-user_id = token.readline().strip() 
-canvas = token.readline().strip()
-course_url = f"https://{canvas}/api/v1/courses/"
-
-headers = {
-    'Authorization': f'Bearer {apiKey}'
-}
-
-params = {
-    'enrollment_type': 'student',  # Change to your preferred enrollment type
-    'enrollment_state': 'active',  # Change to your preferred enrollment state
-    'exclude_blueprint_courses': True,
-    'state[]': ['available'],
-    'include[]': ['term', 'sections','teachers','concluded','favorites','public_description']
-}
-
-response = requests.get(course_url, params=params, headers=headers)
-if response.status_code == 200:
-    courses_data = response.json()
-    create_courses("courses.csv")
-    parsed_courses = course_parser(courses_data)
-else:
-    print('Failed to retrieve courses. Status code', response.status_code)
-
-assignment_list_generator(canvas, params, headers)
+main()
