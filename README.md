@@ -2,7 +2,7 @@
 This project was created to aid students in organizing their course information to optimize productivity.
 
 ## Variables
-To function correctly **canvas-token.txt** must be modified.
+To function correctly **canvas-key.txt** must be modified.
 <br/>
 The first line entered into the .txt file should be your Canvas API token key(refer to token generation)
 <br/>
