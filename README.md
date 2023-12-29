@@ -3,13 +3,9 @@ This project was created to aid students in organizing their course information 
 
 ## Instructions
 To function correctly **canvas-key.txt** must be modified.
-<br/>
 1. Use the python environment command in the terminal **py -m venv env** with the project open
-<br/>
 2. The first line entered into the .txt file should be your Canvas API token key(refer to token generation)
-<br/>
 3. The second line should be your Canvas User_Id(refer to user_id)
-<br/>
 4. The third line should be your university's url(ex. canvas.uw.edu)
 
 ## Canvas API Token key generation
