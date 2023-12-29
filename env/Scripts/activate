@@ -39,10 +39,10 @@ deactivate nondestructive
 if [ "$OSTYPE" = "cygwin" ] || [ "$OSTYPE" = "msys" ] ; then
     # transform D:\path\to\venv to /d/path/to/venv on MSYS
     # and to /cygdrive/d/path/to/venv on Cygwin
-    export VIRTUAL_ENV=$(cygpath "C:\Users\ninja\OneDrive\Desktop\canvas-scraper\env")
+    export VIRTUAL_ENV=$(cygpath "C:\Users\ninja\OneDrive\Desktop\Canvas-scraper\env")
 else
     # use the path as-is
-    export VIRTUAL_ENV="C:\Users\ninja\OneDrive\Desktop\canvas-scraper\env"
+    export VIRTUAL_ENV="C:\Users\ninja\OneDrive\Desktop\Canvas-scraper\env"
 fi
 
 _OLD_VIRTUAL_PATH="$PATH"
