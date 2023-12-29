@@ -4,8 +4,8 @@ This project was created to aid students in organizing their course information 
 ## Instructions
 To function correctly **canvas-key.txt** must be modified.
 1. Use these sequences of commands in the terminal with folder of the project open as the directory
-   - **python -m venv env or python3 -m venv env**
-   - **source env/bin/activate or env/Scripts/activate or env/Scripts/activate.bat**
+   - **python -m venv env** or **python3 -m venv env**
+   - **source env/bin/activate** or **env/Scripts/activate** or **env/Scripts/activate.bat**
    - **pip install -r requirements.txt**
 (Double-check python interpreter path to make sure it's within the environment**
 3. The first line entered into the .txt file should be your Canvas API token key(refer to token generation)
