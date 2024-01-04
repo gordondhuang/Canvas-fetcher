@@ -54,7 +54,6 @@ def create_courseList(data, fileName):
 
 # Parses the JSON data to convert to CSV
 def course_parser(data):
-    print(data)
     with open("courses.csv", 'a', newline='') as csvfile:
         writer = csv.writer(csvfile)
         courses_list = []
@@ -102,6 +101,8 @@ def assignment_list_generator(canvas,params,headers):
     params.clear()
     params.update({'type': 'assignment'})
     params.update({'all_events' : 'True'})
+    params.update({'order_by': 'due_at'})
+    params.update({'per_page': 100})
     assignment_urls = []
     courses = []
 
