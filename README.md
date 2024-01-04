@@ -13,7 +13,7 @@ To function correctly **canvas-key.txt** must be modified.
    python -m venv env 
 
    # Activate the virtual environment
-   source env/bin/activate
+   source env/Scripts/activate
    # Other options: env/Scripts/activate or env/Scripts/activate.bat
 
    # Installs dependencies
