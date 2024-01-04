@@ -20,7 +20,8 @@ def main():
         'enrollment_state': 'active',  # Change to your preferred enrollment state
         'exclude_blueprint_courses': True,
         'state[]': ['available'],
-        'include[]': ['term', 'sections','teachers','concluded','favorites','public_description']
+        'include[]': ['term', 'sections','teachers','concluded','favorites','public_description'],
+        'per_page': 100
     }
 
     response = requests.get(course_url, params=params, headers=headers)
@@ -53,6 +54,7 @@ def create_courseList(data, fileName):
 
 # Parses the JSON data to convert to CSV
 def course_parser(data):
+    print(data)
     with open("courses.csv", 'a', newline='') as csvfile:
         writer = csv.writer(csvfile)
         courses_list = []
