@@ -1,16 +1,31 @@
 # Canvas-Scraper
 This project was created to aid students in organizing their course information to optimize productivity.
 
-## Instructions
+## Usage
 To function correctly **canvas-key.txt** must be modified.
 1. Use these sequences of commands in the terminal with the folder of the project open as the directory
-   - **python -m venv env** or **python3 -m venv env**
-   - **source env/bin/activate** or **env/Scripts/activate** or **env/Scripts/activate.bat**
-   - **pip install -r requirements.txt**
-**(Double-check Python interpreter path to make sure it's within the environment**
+
+   ```python
+   # For mac: python3 -m venv env
+   python -m venv env 
+
+   # Other options: env/Scripts/activate or env/Scripts/activate.bat
+   source env/bin/activate
+
+   # Installs dependencies
+   pip install -r requirements.txt
+   
+   ```
+**(Double-check Python interpreter path to make sure it's within the environment)**
 3. The first line entered into the .txt file should be your Canvas API token key(refer to token generation)
 4. The second line should be your Canvas User_Id(refer to user_id)
 5. The third line should be your university's URL (ex. canvas.uw.edu)
+
+```text
+mycanvastoken123456 
+123456 
+canvas.uw.edu
+```
 
 ## Canvas API Token key generation
 1. Log into your Canvas account
