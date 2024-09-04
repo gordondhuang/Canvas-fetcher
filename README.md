@@ -31,6 +31,12 @@ mycanvastoken123456
 canvas.uw.edu
 ```
 
+Finally run this command in your terminal:
+```bash
+python webscraper.py
+```
+This should produce several csv files that contain course information and assignments.
+
 ## Canvas API Token key generation
 1. Log into your Canvas account
 2. Select the Account >> Settings

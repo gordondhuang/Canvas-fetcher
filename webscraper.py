@@ -45,7 +45,7 @@ def create_courses(fileName):
 def create_assignments(fileName):
     with open(fileName, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
-        headings = ["Assignments", "Dates"]
+        headings = ["Courses", "Assignments", "Dates"]
         writer.writerow(headings)
 
 def create_courseList(data, fileName):
@@ -90,6 +90,7 @@ def update_assignments(data, course):
             if due_date is not None:
                 due_date_obj = datetime.strptime(due_date, '%Y-%m-%dT%H:%M:%SZ')
                 due_date = due_date_obj.strftime("%m/%d/%y")
+            assignment_data.append(course)
             assignment_data.append(assign_name)
             assignment_data.append(due_date)
             writer.writerow(assignment_data)
