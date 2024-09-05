@@ -1,3 +1,2 @@
 <Canvas token>
-<User id>
 <Canvas url>

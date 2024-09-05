@@ -7,7 +7,7 @@ import csv
 def main():
     token = open("canvas-key.txt", "r")
     apiKey = token.readline().strip()
-    user_id = token.readline().strip() 
+    user_id = getUserID() 
     canvas = token.readline().strip()
     course_url = f"https://{canvas}/api/v1/courses/"
 
@@ -80,6 +80,7 @@ def course_parser(data):
 
         create_courseList(courses_list, "courses.json")
         
+# Adds the assignments to each csv file        
 def update_assignments(data, course):
     with open(course, 'a', newline='') as csvfile:
         writer = csv.writer(csvfile)
@@ -90,7 +91,7 @@ def update_assignments(data, course):
             if due_date is not None:
                 due_date_obj = datetime.strptime(due_date, '%Y-%m-%dT%H:%M:%SZ')
                 due_date = due_date_obj.strftime("%m/%d/%y")
-            assignment_data.append(course)
+            assignment_data.append(course.split('.csv')[0])
             assignment_data.append(assign_name)
             assignment_data.append(due_date)
             writer.writerow(assignment_data)
@@ -121,4 +122,26 @@ def assignment_list_generator(canvas,params,headers):
                 update_assignments(response.json(), course_csv)
             else:
                 print('Failed to retrieve assignments. Status code', response.status_code)
+def getUserID():
+    token = open("canvas-key.txt", "r")
+    apiKey = token.readline().strip()
+    canvas = token.readline().strip()
+    course_url = f"https://{canvas}/api/v1/users/self"
+
+    headers = {
+        'Authorization': f'Bearer {apiKey}'
+    }
+
+    params = {
+        'enrollment_type': 'student',  # Change to your preferred enrollment type
+    }
+
+    response = requests.get(course_url, params=params, headers=headers)
+    if response.status_code == 200:
+        user_data = response.json()
+        id = list(user_data.values())[0]
+        return id
+    else:
+        print('Failed to retrieve courses. Status code', response.status_code)
+
 main()
