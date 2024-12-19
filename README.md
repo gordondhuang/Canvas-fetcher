@@ -1,4 +1,4 @@
-# Canvas-Scraper
+# Canvas-Fetcher
 This project was created to aid students in organizing their course information to optimize productivity.
 
 ## Usage
